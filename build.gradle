@@ -20,8 +20,8 @@ publishing {
             name = "APTED"
             url = "https://maven.pkg.github.com/ARTIEROCKS/apted"
             credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("ARTIE_USERNAME")
-                password = project.findProperty("gpr.key") ?: System.getenv("ARTIE_TOKEN")
+                username = project.findProperty("gpr.user") ?: System.getenv("MAVEN_USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("MAVEN_PASSWORD")
             }
         }
     }
