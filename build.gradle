@@ -1,10 +1,15 @@
-apply plugin: 'java'
+plugins {
+    id("maven-publish")
+}
 
-sourceCompatibility = '1.8'
+apply plugin: 'java'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.5.1'
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+wrapper {
+    gradleVersion = '8.5-rc-4'
     distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
 
@@ -12,11 +17,32 @@ task wrapper(type: Wrapper) {
 repositories {
     mavenCentral()
 }
+publishing {
+    repositories {
+        maven {
+            name = "APTED"
+            url = "https://maven.pkg.github.com/ARTIEROCKS/apted"
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("MAVEN_USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("MAVEN_PASSWORD")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            groupId = 'artie.web'
+            artifactId = 'apted'
+            version = '0.2'
+
+            from(components.java)
+        }
+    }
+}
 
 // Project dependencies. Currently only for unit tests.
 dependencies {
-    testCompile 'junit:junit:4.12',
-                'com.google.code.gson:gson:2.8.2'
+    testImplementation 'junit:junit:4.12',
+            'com.google.code.gson:gson:2.8.2'
 }
 
 // Specify main class for the JAR file.
@@ -26,21 +52,21 @@ jar {
     }
     // Exclude the old API from the JAR.
     exclude (
-        'costmodel',
-        'distance',
-        'node',
-        'parser'
+            'costmodel',
+            'distance',
+            'node',
+            'parser'
     )
 }
 
 // Include test classes and private members into javadoc.
 javadoc {
-  classpath += sourceSets.test.compileClasspath
-  source += sourceSets.test.allJava
-  options.memberLevel = JavadocMemberLevel.PRIVATE
+    classpath += sourceSets.test.compileClasspath
+    source += sourceSets.test.allJava
+    options.memberLevel = JavadocMemberLevel.PRIVATE
 }
 
 // Enable printing to standard output while testing.
 test {
-  testLogging.showStandardStreams = true
+    testLogging.showStandardStreams = true
 }
