@@ -5,6 +5,9 @@ plugins {
 apply plugin: 'java'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
 wrapper {
     gradleVersion = '8.5-rc-4'
     distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
@@ -29,7 +32,7 @@ publishing {
         gpr(MavenPublication) {
             groupId = 'artie.web'
             artifactId = 'apted'
-            version = '0.1'
+            version = '0.2'
 
             from(components.java)
         }
